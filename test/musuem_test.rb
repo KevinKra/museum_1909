@@ -63,8 +63,10 @@ class MusuemTest < Minitest::Test
     @musuem.add_exhibit(@imax) 
     @musuem.admit(@bob)
     @musuem.admit(@sally)
-    mock_assertion = { @gems_and_minerals => [@bob], @dead_sea_scrolls => [@bob], @imax => [@sally]}
+    @musuem.admit(@tj)
+    mock_assertion = { @gems_and_minerals => [@bob, @tj], @dead_sea_scrolls => [@bob, @tj], @imax => [@sally, @tj]}
     assert_equal mock_assertion, @musuem.patrons_by_exhibit_interest
+    assert_equal 20, @bob.spending_money
   end
 
   def test_patrons_can_only_attend_exhibits_they_can_afford
@@ -79,5 +81,16 @@ class MusuemTest < Minitest::Test
     assert_equal 7, @tj.spending_money
     assert_equal 10, @bob.spending_money
     assert_equal 5, @sally.spending_money
+  end
+
+  def test_it_can_generate_revenue
+    @musuem.add_exhibit(@gems_and_minerals) 
+    @musuem.add_exhibit(@dead_sea_scrolls) 
+    @musuem.add_exhibit(@imax) 
+    @musuem.admit(@bob)
+    @musuem.admit(@sally)
+    @musuem.admit(@tj)
+    @musuem.patrons_of_exhibits
+    assert_equal 25, @musuem.revenue
   end
 end

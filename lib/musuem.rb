@@ -1,9 +1,10 @@
 class Musuem
-  attr_reader :name, :exhibits, :patrons
+  attr_reader :name, :exhibits, :patrons, :revenue
   def initialize(name)
     @name = name
     @exhibits = []
     @patrons = []
+    @revenue = 0
   end
 
   def add_exhibit(exhibit)
@@ -40,8 +41,9 @@ class Musuem
     @patrons.each do |patron|
       patron.interests.each do |interest|
         output.each do |key,value|
-          if key.name == interest && patron.spending_money >= key.cost
+          if (key.name == interest && patron.spending_money >= key.cost)
             patron.spend_money(key.cost)
+            @revenue += key.cost
             value << patron
           end
         end
