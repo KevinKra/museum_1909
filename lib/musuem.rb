@@ -34,4 +34,19 @@ class Musuem
     end
     output
   end
+
+  def patrons_of_exhibits
+    output = Hash[@exhibits.map {|exhibit| [exhibit, []]}]
+    @patrons.each do |patron|
+      patron.interests.each do |interest|
+        output.each do |key,value|
+          if key.name == interest && patron.spending_money >= key.cost
+            # patron.spend_money(key.cost)
+            value << patron
+          end
+        end
+      end
+    end
+    output
+  end
 end

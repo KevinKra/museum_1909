@@ -15,7 +15,11 @@ class MusuemTest < Minitest::Test
     @bob.add_interest("Dead Sea Scrolls") 
     @bob.add_interest("Gems and Minerals")
     @sally = Patron.new("Sally", 20)
-    @sally.add_interest("IMAX")  
+    @sally.add_interest("IMAX")
+    @tj = Patron.new("TJ", 7) 
+    @tj.add_interest("IMAX")
+    @tj.add_interest("Dead Sea Scrolls")
+    @tj.add_interest("Gems and Minerals")
   end
 
   def test_it_exists
@@ -61,5 +65,16 @@ class MusuemTest < Minitest::Test
     @musuem.admit(@sally)
     mock_assertion = { @gems_and_minerals => [@bob], @dead_sea_scrolls => [@bob], @imax => [@sally]}
     assert_equal mock_assertion, @musuem.patrons_by_exhibit_interest
+  end
+
+  def test_patrons_can_only_attend_exhibits_they_can_afford
+    @musuem.add_exhibit(@gems_and_minerals) 
+    @musuem.add_exhibit(@dead_sea_scrolls) 
+    @musuem.add_exhibit(@imax) 
+    @musuem.admit(@bob)
+    @musuem.admit(@sally)
+    @musuem.admit(@tj)
+    mock_assertion = { @gems_and_minerals => [@bob, @tj], @dead_sea_scrolls => [@bob], @imax => [@sally]}
+    assert_equal mock_assertion, @musuem.patrons_of_exhibits
   end
 end
