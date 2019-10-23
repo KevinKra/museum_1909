@@ -10,7 +10,12 @@ class MusuemTest < Minitest::Test
     @musuem = Musuem.new("Denver Museum of Nature and Science")
     @gems_and_minerals = Exhibit.new("Gems and Minerals", 0)
     @dead_sea_scrolls = Exhibit.new("Dead Sea Scrolls", 10)
-    @imax = Exhibit.new("IMAX", 15) 
+    @imax = Exhibit.new("IMAX", 15)
+    @bob = Patron.new("Bob", 20)
+    @bob.add_interest("Dead Sea Scrolls") 
+    @bob.add_interest("Gems and Minerals")
+    @sally = Patron.new("Sally", 20)
+    @sally.add_interest("IMAX")  
   end
 
   def test_it_exists
@@ -20,6 +25,7 @@ class MusuemTest < Minitest::Test
   def test_it_can_read_attributes
     assert_equal "Denver Museum of Nature and Science", @musuem.name
     assert_equal [], @musuem.exhibits
+    assert_equal [], @musuem.patrons
   end
 
   def test_it_can_add_exhibits
@@ -31,16 +37,29 @@ class MusuemTest < Minitest::Test
   end
 
   def test_it_can_recommend_exhibits
-    bob = Patron.new("Bob", 20)
-    bob.add_interest("Dead Sea Scrolls") 
-    bob.add_interest("Gems and Minerals")
-    sally = Patron.new("Sally", 20)
-    sally.add_interest("IMAX")  
     @musuem.add_exhibit(@gems_and_minerals) 
     @musuem.add_exhibit(@dead_sea_scrolls) 
     @musuem.add_exhibit(@imax) 
-    assert_equal [@dead_sea_scrolls, @gems_and_minerals], @musuem.recommend_exhibits(bob)
-    assert_equal [@imax], @musuem.recommend_exhibits(sally)
+    assert_equal [@dead_sea_scrolls, @gems_and_minerals], @musuem.recommend_exhibits(@bob)
+    assert_equal [@imax], @musuem.recommend_exhibits(@sally)
   end
 
+  def test_it_can_admit_patrons
+    @musuem.add_exhibit(@gems_and_minerals) 
+    @musuem.add_exhibit(@dead_sea_scrolls) 
+    @musuem.add_exhibit(@imax) 
+    @musuem.admit(@bob)
+    @musuem.admit(@sally)
+    assert_equal [@bob, @sally], @musuem.patrons
+  end
+
+  def test_it_can_sort_admitted_patrons_by_interest
+    @musuem.add_exhibit(@gems_and_minerals) 
+    @musuem.add_exhibit(@dead_sea_scrolls) 
+    @musuem.add_exhibit(@imax) 
+    @musuem.admit(@bob)
+    @musuem.admit(@sally)
+    mock_assertion = { @gems_and_minerals => [@bob], @dead_sea_scrolls => [@bob], @imax => [@sally]}
+    assert_equal mock_assertion, @musuem.patrons_by_exhibit_interest
+  end
 end
