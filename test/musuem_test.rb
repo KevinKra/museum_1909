@@ -76,5 +76,8 @@ class MusuemTest < Minitest::Test
     @musuem.admit(@tj)
     mock_assertion = { @gems_and_minerals => [@bob, @tj], @dead_sea_scrolls => [@bob], @imax => [@sally]}
     assert_equal mock_assertion, @musuem.patrons_of_exhibits
+    assert_equal 7, @tj.spending_money
+    assert_equal 10, @bob.spending_money
+    assert_equal 5, @sally.spending_money
   end
 end

@@ -41,7 +41,7 @@ class Musuem
       patron.interests.each do |interest|
         output.each do |key,value|
           if key.name == interest && patron.spending_money >= key.cost
-            # patron.spend_money(key.cost)
+            patron.spend_money(key.cost)
             value << patron
           end
         end
